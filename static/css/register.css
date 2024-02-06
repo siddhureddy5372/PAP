@@ -1,0 +1,54 @@
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+h5 {
+    color: red;
+    text-align: center;
+    margin-top: 2%;
+}
+
+form {
+    background-color: #fff;
+    padding: 2%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    text-align: center;
+    margin: 0 auto; /* Center the form */
+}
+
+p {
+    margin: 2% 0;
+    font-size: 2vw;
+}
+
+input {
+    padding: 2%;
+    margin-bottom: 2%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 2vw;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

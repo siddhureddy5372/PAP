@@ -1,0 +1,7 @@
+{% load static %}
+
+<form method="POST" action="create_profile">
+    {% csrf_token %}
+    {{profile}}
+    <input type="submit"/>
+</form>

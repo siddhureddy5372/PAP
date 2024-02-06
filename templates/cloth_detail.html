@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Cloths Detail</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 order-md-1">
+            <img src="{{ item.image.url }}" alt="{{ item.description }}" class="img-fluid rounded w-100 mb-4">
+        </div>
+        <div class="col-md-6 order-md-2 mt-5">
+            <h2><strong>Brand:</strong> {{ item.brand }}</h2>
+            <p><strong>Color:</strong> {{ item.color }}</p>
+            <p><strong>Category:</strong> {{ item.category }}</p>
+            <p><strong>Subcategory:</strong> {{ item.subcategory }}</p>
+            <p><strong>Add Date:</strong> {{ item.add_date}}</p>
+            <p><strong>Worn count:</strong> {{ item.worn_count }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js (if needed) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

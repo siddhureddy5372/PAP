@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            padding: 20px;
+            text-align: center; /* Center the content within the container */
+        }
+
+        h1 {
+            color: #0d6efd;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+        .btn-link {
+            color: #0d6efd;
+        }
+
+        /* Larger form controls */
+        .form-control-lg {
+            height: calc(1.5em + 1.125rem + 2px);
+            padding: 0.75rem 1.25rem;
+            font-size: 1.25rem;
+        }
+
+        /* Larger button */
+        .btn-lg {
+            padding: 0.75rem 1.25rem;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+
+<body style="padding-top: 12%;">
+    <header class="fixed-top bg-primary p-4">
+        <div class="text-center">
+            <h1 style="color: white;">DressRight</h1>
+        </div>
+    </header>
+    <div class="container mt-5 mb-4">
+    <div class="container">
+        {% for message in messages %}
+            <h5>{{message}}</h5>
+        {% endfor %}
+        <img class="mb-3" src="{% static 'images/logo.png' %}" height="150" alt="Bootstrap logo">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <h1 class="mb-4">Login</h1>
+                <input type="username" name="username" class="form-control form-control-lg mb-3" placeholder="Enter username" required>
+                <input type="password" name="password" class="form-control form-control-lg mb-3" placeholder="Password" required>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+            </div>
+        </form>
+
+        <div class="mt-3">
+            <p>Don't have an account? <a href="{% url 'register' %}" class="btn btn-link">Register</a></p>
+        </div>
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+
+</html>

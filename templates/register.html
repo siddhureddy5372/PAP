@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
+
+<h1>Sign up Below</h1>
+
+{% for message in messages %}
+    <h5>{{ message }}</h5>
+{% endfor %}
+
+<form method="POST" action="register">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit"/>
+</form>
