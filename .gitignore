@@ -1,11 +1,13 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.pyc
+# Ignore Django migration files
+**/migrations/*.py
+**/migrations/*.pyc
+**/migrations/__pycache__
+
+# Ignore Python bytecode files
+**/__pycache__/
+
 
 /static
 
-migrations/
 
 /media
