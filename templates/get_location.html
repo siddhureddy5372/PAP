@@ -1,0 +1,48 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Location</title>
+</head>
+<body>
+    <h1 style="color: blue">Set your current location</h1>
+
+    <button onclick="sendLocation()">Store Location</button>
+
+    {% csrf_token %}
+    <script>
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        function sendLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+                    
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "{% url 'location' %}", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                console.log(xhr.responseText);
+                                // Redirect to the home page after sending location
+                                window.location.href = "{% url 'home' %}";
+                            } else {
+                                console.error('Error:', xhr.status);
+                            }
+                        }
+                    };
+                    xhr.send("latitude=" + encodeURIComponent(latitude) + "&longitude=" + encodeURIComponent(longitude));
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</body>
+</html>

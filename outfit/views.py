@@ -1,73 +1,74 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from closet.models import ClosetClothes
+from user.models import Profile
+from .models import Outfit, OutfitClothes
 from django.db import transaction
-from .models import Outfit
-import random
+from django.db.models import Case, When, IntegerField
 
-def choose_random_item(category_queryset):
-    if category_queryset.exists():
-        eligible_items = category_queryset.filter(worn_count__lte=3)
-        if eligible_items:
-            return random.choice(eligible_items)  # Use eligible_items instead of category_queryset
-    return None
-
-
-def updating_items(request,new_items):
-    request.session["suggested_items"] = new_items # Creates an key "suggested_items" = new_items if not an empty [].
-
-def adding_outfits(request,ids):
+def adding_outfits(request, ids):
     if len(ids) != 0:
-        outfit = Outfit.objects.create(user_id=request.user.id, name='Default name')
+        outfit = Outfit.objects.create(user_id=request.user.id, name="Default name")
         for item in ids:
-            outfit.clothes.add(ClosetClothes.objects.get(clothes_id = item))
+            outfit.clothes.add(ClosetClothes.objects.get(clothes_id=item))
         outfit.save()
 
+@login_required
+def store_location(request):
+    if request.method == "POST":
+        latitude = request.POST.get("latitude")
+        longitude = request.POST.get("longitude")
+
+        # Update user's location in the profile
+        user_profile = Profile.objects.get(user=request.user)
+        user_profile.location = f"{latitude},{longitude}"
+        try:
+            user_profile.save()  # Save the changes
+        except Exception as e:
+            print(f"Error saving location: {e}")
+            # If there's an error, render the get_location.html template with latitude and longitude
+            return render(request, "get_location.html", {"lat": latitude, "long": longitude})
+
+        return redirect("home")  # Redirect to profile after successful save
+    else:
+        # Handle GET request
+        return render(request, "get_location.html")
 
 @login_required
 def increment(request):
-    items_ids = request.session.get('suggested_items', []) # gets value of key "suggested_items" if not an return empty [].
-    suggested_items = ClosetClothes.objects.filter(user=request.user,clothes_id__in = items_ids)
+    items_ids = request.session.get("suggested_items", [])
+    suggested_items = ClosetClothes.objects.filter(clothes_id__in=items_ids)
     with transaction.atomic():
         for item in suggested_items:
-            if item is not None:
-                item.worn_count += 1
-                item.save()
+            item.worn_count += 1
+            item.save()
         adding_outfits(request,items_ids)
-
     return redirect("home")
+
+@login_required
+def all_outfits(request):
+    outfits = Outfit.objects.filter(user=request.user).order_by("-add_date")
+    return render(request, "all_outfits.html", {"outfits": outfits})
+
 
 
 @login_required
-def suggest_outfit(request):
-    weather_data = {"temperature": 0, "humidity": 80, "wind_speed": 10, "rain_chance": "heavy"}
+def outfit_detail(request, outfit_id):
+    outfit_name = Outfit.objects.get(outfit_id=outfit_id)
+    outfit = OutfitClothes.objects.filter(outfit_id=outfit_id)
+    clothes_ids = outfit.values_list("clothes_id", flat=True)
 
-    suggested_items = []
-    id_of_items = []
-    if weather_data["temperature"] < 10:
-        suggested_items.extend([
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['jacket', 'hoodie'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['t-shirt'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['joggers', 'jeans'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['boots', 'trainers']))
-        ])
-    elif 10 <= weather_data["temperature"] < 20:
-        suggested_items.extend([
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['jacket', 'hoodie', 'coat'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['t-shirt'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['joggers', 'jeans'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['boots', 'trainers', 'sneakers']))
-        ])
-    elif 20 <= weather_data["temperature"] < 30:
-        suggested_items.extend([
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['t-shirt', 'shirt', 'hoodie'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['jeans', 'shorts', 'pants'])),
-            choose_random_item(ClosetClothes.objects.filter(user=request.user, subcategory__in=['trainers', 'sneakers']))
-        ])
-    user_id = request.user.id
-    for item in suggested_items:
-        if item is not None :
-            id_of_items.append(item.clothes_id)
-    updating_items(request,id_of_items)
-    suggest = request.session.get('suggested_items', []) # gets value of key "suggested_items" if not an return empty [].
-    return render(request, 'home.html', {"outfit":suggested_items, "user": user_id,"ids":id_of_items,"suggest":suggest})
+    # Define custom ordering based on category and item_type
+    custom_order = Case(
+        When(category='top', then=Case(
+            When(subcategory='t-shirt', then=1),
+            default=0
+        )),
+        When(category='bottom', then=1),
+        When(category='shoes', then=2),
+        default=3,  # For any other category not specified, set it to a higher value
+        output_field=IntegerField()
+    )
+
+    images = ClosetClothes.objects.filter(clothes_id__in=clothes_ids).order_by(custom_order)
+    return render(request, "display_outfit.html", {"images": images, "outfit": outfit_name})

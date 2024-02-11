@@ -7,12 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/cloths.css' %}">
-    <title>To Wash</title>
+    <title>Laundry</title>
 </head>
-<body>
-
-<div class="container mt-5">
-    <h1>To wash:</h1>
+<body class="vh-100 m-0 p-0">
+    <style>
+        @media (max-width: 576px) {
+            .user-image {
+                width: 50%; /* Adjust the size as needed */
+                margin: 0 auto; /* Center the image */
+            }
+        }
+        
+    </style>
+    <header class="navbar navbar-dark bg-info fixed-top">
+        <div class="fixed-top text-center bg-info p-1" style="color: black; z-index: 1;">
+            <h2>DressRight</h2>
+        </div>
+    </header>
+    <div class="container-fluid mt-3 pt-5" style="position: relative; z-index: 2;">
+        <h1 class="text-center">To Wash: </h1>
+    </div>
 
     <div class="image-container mt-5">
         {% for item in clothes %}
@@ -24,26 +38,31 @@
         {% endfor %}
     </div>
 </div>
-<div class="fixed-bottom bg-primary p-3">
-    <!-- This container will be fixed at the bottom on mobile devices -->
+<h3 style="color: white;" >© 2024 DressRight. All rights reserved.</h3>
+<div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
     <div class="container">
         <div class="row justify-content-around">
             <div class="col-3 text-center">
-                <a href="home" class="btn btn-light">Home</a>
+                <a href="/home" class="btn btn-light">Home</a>
             </div>
             <div class="col-3 text-center">
-                <a href="cloths" class="btn btn-light">Cloths</a>
+                <a href="/cloths" class="btn btn-light">Cloths</a>
             </div>
             <div class="col-3 text-center">
-                <a href="upload" class="btn btn-light">Upload</a>
+                <a href="/upload" class="btn btn-light">Upload</a>
             </div>
             <div class="col-3 text-center">
-                <a href="laundry" class="btn btn-light">Laundry</a>
+                <a href="/profile" class="btn btn-light">Profile</a>
             </div>
         </div>
     </div>
-<!-- Bootstrap JS and Popper.js (if needed) -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 // updateSubcategories.js
+
+// Function to update subcategories based on the selected category
 function updateSubcategories() {
     var categorySelect = document.getElementById("category");
     var subcategorySelect = document.getElementById("subcategory");
@@ -26,9 +28,12 @@ function updateSubcategories() {
     }
 }
 
+// Function to add options to a select element
 function addOption(selectElement, value, text) {
     var option = document.createElement("option");
     option.value = value;
     option.text = text;
     selectElement.add(option);
 }
+
+    

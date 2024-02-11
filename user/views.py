@@ -45,6 +45,7 @@ def create_profile(request):
     # Render the template with the form
     return render(request, 'create_profile.html', {'profile': profile_form}) 
 
+@login_required
 def edit_profile(request):
     user_profile = Profile.objects.get(user=request.user)
     
@@ -52,11 +53,13 @@ def edit_profile(request):
         form = ProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+            return redirect("profile")
     else:
         form = ProfileForm(instance=user_profile)
     
     context = {'form': form}
     return render(request, 'edit_profile.html', context)
+
 
 
 def register(request):

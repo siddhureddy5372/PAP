@@ -13,6 +13,15 @@
 </head>
 
 <body class="vh-100 m-0 p-0">
+    <style>
+        @media (max-width: 576px) {
+            .user-image {
+                width: 50%; /* Adjust the size as needed */
+                margin: 0 auto; /* Center the image */
+            }
+        }
+        
+    </style>
     <header class="navbar navbar-dark bg-info fixed-top">
         <div class="fixed-top text-center bg-info p-1" style="color: black;">
             <h2>DressRight</h2>
@@ -71,20 +80,20 @@
         </div>
     </div>
 
-    <div class="fixed-bottom bg-light p-2">
+    <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
         <div class="container">
             <div class="row justify-content-around">
                 <div class="col-3 text-center">
-                    <a href="home" class="btn btn-light">Home</a>
+                    <a href="/home" class="btn btn-light">Home</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="cloths" class="btn btn-light">Cloths</a>
+                    <a href="/cloths" class="btn btn-light">Cloths</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="upload" class="btn btn-light">Upload</a>
+                    <a href="/upload" class="btn btn-light">Upload</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="profile" class="btn btn-light">Profile</a>
+                    <a href="/profile" class="btn btn-light">Profile</a>
                 </div>
             </div>
         </div>

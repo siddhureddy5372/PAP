@@ -2,9 +2,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-{% csrf_token %}
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,16 +9,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/cloths.css' %}">
 </head>
-
 <body class="vh-100 m-0 p-0">
+    <style>
+        @media (max-width: 576px) {
+            .user-image {
+                width: 50%; /* Adjust the size as needed */
+                margin: 0 auto; /* Center the image */
+            }
+        }
+        
+    </style>
     <header class="navbar navbar-dark bg-info fixed-top">
         <div class="fixed-top text-center bg-info p-1"style="color: black;">
             <h2>DressRight</h2>
         </div>
     </header>
-    <div class="container-fluid mt-3 pt-5">
-        <h1 class="text-center">Outfit</h1>
-        <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()">Wear</a>
+        <div class="container-fluid mt-3 pt-5">
+            <h1 class="text-center">Outfit</h1>
+<h3 id="longitude"></h3>
+            <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()">Wear</a>
             <div class="image-card">
                 {% for item in outfit %}
                     {% if item.pk %}
@@ -30,28 +36,27 @@
                         </a>
                     {% endif %}
                 {% endfor %}
-
             </div>
-    </div>
-    <h3 style="color: white;" >© 2024 DressRight. All rights reserved.</h3>
-    <div class="fixed-bottom bg-light p-2 mt-5">
-        <div class="container">
-            <div class="row justify-content-around">
-                <div class="col-3 text-center">
-                    <a href="home" class="btn btn-light">Home</a>
-                </div>
-                <div class="col-3 text-center">
-                    <a href="cloths" class="btn btn-light">Cloths</a>
-                </div>
-                <div class="col-3 text-center">
-                    <a href="upload" class="btn btn-light">Upload</a>
-                </div>
-                <div class="col-3 text-center">
-                    <a href="profile" class="btn btn-light">Profile</a>
+        </div>
+        <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
+        <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
+            <div class="container">
+                <div class="row justify-content-around">
+                    <div class="col-3 text-center">
+                        <a href="/home" class="btn btn-light">Home</a>
+                    </div>
+                    <div class="col-3 text-center">
+                        <a href="/cloths" class="btn btn-light">Cloths</a>
+                    </div>
+                    <div class="col-3 text-center">
+                        <a href="/upload" class="btn btn-light">Upload</a>
+                    </div>
+                    <div class="col-3 text-center">
+                        <a href="/profile" class="btn btn-light">Profile</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
@@ -70,8 +75,5 @@
             }
         }
     </script>
-    
 </body>
-
-
 </html>

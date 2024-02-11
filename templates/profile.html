@@ -23,8 +23,11 @@
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12 col-lg-6 text-center mb-3">
-                <!-- Add user image here with responsive class -->
-                <img src="{% static 'images/logo.png' %}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
+                {% if user.image %}
+                <img src="{{user.image.url}}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
+                {% else %}
+                <img src="{% static 'images/defualt_profile.jpg' %}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
+                {% endif %}
             </div>            
             </div>
             <div class="col-md-12 col-lg-6">
@@ -39,6 +42,7 @@
                         <p class="card-text"><strong>Location:</strong> {{ user.location }}</p>
 
                         <a href="edit_profile" class="btn btn-light">Edit</a>
+                        <a href="{% url 'location' %}" class="btn btn-light">Location</a>
                         <a href="logout" class="btn btn-light">Logout</a>
                     </div>
                 </div>
@@ -49,8 +53,8 @@
             <div class="col-md-12 col-lg-6">
                 <div class="card h-100 mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Home</h5>
-                        <a href="{% url 'home' %}" class="btn btn-secondary btn-block">Go to Home</a>
+                        <h5 class="card-title">All Outfits</h5>
+                        <a href="{% url 'all_outfits' %}" class="btn btn-secondary btn-block">Go to All Outfits</a>
                     </div>
                 </div>
             </div>
@@ -70,16 +74,16 @@
         <div class="container">
             <div class="row justify-content-around">
                 <div class="col-3 text-center">
-                    <a href="home" class="btn btn-light">Home</a>
+                    <a href="/home" class="btn btn-light">Home</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="cloths" class="btn btn-light">Cloths</a>
+                    <a href="/cloths" class="btn btn-light">Cloths</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="upload" class="btn btn-light">Upload</a>
+                    <a href="/upload" class="btn btn-light">Upload</a>
                 </div>
                 <div class="col-3 text-center">
-                    <a href="profile" class="btn btn-light">Profile</a>
+                    <a href="/profile" class="btn btn-light">Profile</a>
                 </div>
             </div>
         </div>

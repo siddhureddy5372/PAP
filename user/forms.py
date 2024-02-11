@@ -18,12 +18,17 @@ class CustomUserCreationForm(UserCreationForm):
             raise forms.ValidationError("Passwords do not match.")
 
         return password2
+
     
-
-
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'gender', 'dob', 'location']
+        fields = ['Profile_image','first_name', 'last_name', 'gender', 'dob']
 
-
+    def clean(self):
+        cleaned_data = super().clean()
+        required_fields = ['first_name', 'last_name', 'gender', 'dob']
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                raise forms.ValidationError(f"{field} is required.")
+        return cleaned_data
