@@ -23,8 +23,8 @@
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12 col-lg-6 text-center mb-3">
-                {% if user.image %}
-                <img src="{{user.image.url}}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
+                {% if user.Profile_image %}
+                <img src="{{user.Profile_image.url}}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
                 {% else %}
                 <img src="{% static 'images/defualt_profile.jpg' %}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
                 {% endif %}
@@ -63,6 +63,14 @@
                     <div class="card-body">
                         <h5 class="card-title">Laundry</h5>
                         <a href="{% url 'laundry' %}" class="btn btn-secondary btn-block">Laundry</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <div class="card h-100 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Restore Clothes</h5>
+                        <a href="{% url 'restore' %}" class="btn btn-secondary btn-block">Restore</a>
                     </div>
                 </div>
             </div>

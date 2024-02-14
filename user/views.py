@@ -33,12 +33,12 @@ def login(request):
 def create_profile(request):
     if request.method == "POST":
         user = request.user
-        profile_form = ProfileForm(request.POST)
+        profile_form = ProfileForm(request.POST,request.FILES)
         if profile_form.is_valid():
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            redirect("home")
+            return redirect("home")
     else:
         profile_form = ProfileForm()
 
@@ -50,9 +50,11 @@ def edit_profile(request):
     user_profile = Profile.objects.get(user=request.user)
     
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=user_profile)
+        form = ProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
-            form.save()
+            profile = form.save(commit=False)
+            profile.user = request.user  # Set the user field
+            profile.save()
             return redirect("profile")
     else:
         form = ProfileForm(instance=user_profile)

@@ -16,7 +16,7 @@ class ClosetClothes(models.Model):
     color = models.CharField(max_length=20)
     image = models.ImageField(upload_to=user_folder_path)
     add_date = models.DateField()
-    worn_count = models.IntegerField(default=0)
+    waterproof = models.IntegerField(default = 0)
 
     class Meta:
         managed = False
@@ -26,6 +26,8 @@ class User_Cloths(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, models.CASCADE, blank=True, null=True)
     cloths = models.ForeignKey(ClosetClothes, models.CASCADE, blank=True, null=True)
+    worn_count = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         managed = False

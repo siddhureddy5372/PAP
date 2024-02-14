@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,11 +38,14 @@
                 <p><strong>Color:</strong> {{ item.color }}</p>
                 <p><strong>Category:</strong> {{ item.category }}</p>
                 <p><strong>Subcategory:</strong> {{ item.subcategory }}</p>
-                <p><strong>Add Date:</strong> {{ item.add_date}}</p>
-                <p><strong>Worn count:</strong> {{ item.worn_count }}</p>
+                <p><strong>Worn Count:</strong> {{ cloth.worn_count }}</p>
+                <!-- Remove Button -->
+                <button type="button" class="btn btn-danger" id="removeButton">Remove</button>
             </div>
         </div>
     </div>
+
+    
 
     <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
 
@@ -64,6 +68,13 @@
         </div>
     </div>
 
+    <script>
+        document.getElementById("removeButton").addEventListener("click", function() {
+            if (confirm("Are you sure you want to remove this clothing item?")) {
+                window.location.href = "{% url 'remove_clothing' cloth_id=cloth.pk %}";
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
             crossorigin="anonymous"></script>

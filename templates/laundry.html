@@ -29,13 +29,16 @@
     </div>
 
     <div class="image-container mt-5">
-        {% for item in clothes %}
-            <div class="image-card">
-                <a href="{% url 'reset' item_id=item.pk %}">
-                    <img src="{{ item.image.url }}" alt="{{ item.description }}" class="img-fluid">
-                </a>
-            </div>
-        {% endfor %}
+        {% for user_cloth_id, image_url in list %}
+    {% if user_cloth_id %}
+        <div class="image-card">
+            <a href="{% url 'reset' item_id=user_cloth_id %}">
+                <img src="/media/{{ image_url }}" class="img-fluid">
+            </a>
+        </div>
+    {% endif %}
+{% endfor %}
+
     </div>
 </div>
 <h3 style="color: white;" >© 2024 DressRight. All rights reserved.</h3>

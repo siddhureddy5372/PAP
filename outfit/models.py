@@ -14,5 +14,5 @@ class Outfit(models.Model):
 
 class OutfitClothes(models.Model):
     id = models.AutoField(primary_key=True)
-    clothes = models.ForeignKey(ClosetClothes, on_delete=models.CASCADE)
-    outfit = models.ForeignKey(Outfit, on_delete=models.CASCADE)
+    clothes = models.ForeignKey(ClosetClothes, on_delete=models.CASCADE,null = True)
+    outfit = models.ForeignKey(Outfit, on_delete=models.CASCADE,null = True)

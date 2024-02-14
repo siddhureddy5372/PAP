@@ -15,9 +15,20 @@
         </div>
     </header>
     
+    <style>
+        .remove-button {
+            position: absolute;
+            top: 60%;
+            right: 5%;
+        }
+    </style>
+    
     <div class="container-fluid mt-3 pt-5" style="position: relative; z-index: 2;">
-        <h1 class="text-center">{{outfit.name}} Outfit</h1>
+        <h1 class="p-2">{{ outfit.name }} Outfit</h1>
+        <button type="button" class="btn btn-danger remove-button" id="removeButton">Remove</button>
     </div>
+    
+    
         <div class="row">
             <div class="col-md-6">
                 <div class="image-card">
@@ -32,6 +43,14 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        document.getElementById("removeButton").addEventListener("click", function() {
+            if (confirm("Are you sure you want to remove this clothing item?")) {
+                window.location.href = "{% url 'remove_outfit' outfit_id=outfit.pk %}";
+            }
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

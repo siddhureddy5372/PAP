@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 def user_profile_path(instance, filename):
     # This function defines the folder structure for user-uploaded images
-    return f'images/{filename}'
+    return f'profile_pics/{filename}'
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -15,7 +15,7 @@ class Profile(models.Model):
     gender = models.CharField(blank=True, max_length=40, null=True)
     dob = models.CharField(blank=True, max_length=40, null=True)
     location = models.CharField(blank=True, max_length=254, null=True)
-    Profile_image = models.ImageField(upload_to=user_profile_path)
+    Profile_image = models.ImageField(upload_to=user_profile_path,null = True)
 
 
     

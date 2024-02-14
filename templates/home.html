@@ -26,16 +26,18 @@
     </header>
         <div class="container-fluid mt-3 pt-5">
             <h1 class="text-center">Outfit</h1>
-<h3 id="longitude"></h3>
+<h3> {{con}} </h3>
             <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()">Wear</a>
             <div class="image-card">
-                {% for item in outfit %}
-                    {% if item.pk %}
-                        <a href="{% url 'cloths_detail' item_id=item.pk %}">
-                            <img src="{{ item.image.url }}" class="img-fluid">
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                {% for user_cloth_id, image_url in outfit %}
+    {% if user_cloth_id %}
+        <div class="image-card">
+            <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                <img src="{{ image_url.url }}" class="img-fluid">
+            </a>
+        </div>
+    {% endif %}
+{% endfor %}
             </div>
         </div>
         <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
@@ -62,16 +64,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script>
         function showConfirmationPopup() {
-            // Display a confirmation dialog
-            var userResponse = confirm("Do you want to wear this?");
-            
-            // Check user's response
-            if (userResponse) {
-                // If 'Yes' is clicked, redirect to the 'worn' URL
-                window.location.href = "{% url 'worn' %}";
+            // Display a prompt dialog to get the name of the outfit
+            var outfitName = prompt("Enter the name of the outfit:");
+    
+            // Check if the user entered a name
+            if (outfitName !== null) {
+                // If the user entered a name, redirect to the 'worn' URL with the outfit name as a query parameter
+                window.location.href = `/worn/${encodeURIComponent(outfitName)}/`;
+
             } else {
-                // If 'No' is clicked, do nothing or provide alternative action
-                // For example: alert("You chose not to wear it");
+                // If the user clicked cancel or didn't enter a name, do nothing
+                // You can provide alternative action here if needed
             }
         }
     </script>
