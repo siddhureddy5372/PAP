@@ -1,9 +1,11 @@
 import os
 import random
 import requests
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from closet.models import ClosetClothes, User_Cloths
+from closet.models import User_Cloths
 from user.models import Profile
 
 def choose_random_item(items):
@@ -45,14 +47,37 @@ def get_weather_data(latitude, longitude):
     except requests.RequestException as e:
         return None
 
+
+
+
+
 @login_required
 def suggest_outfit(request):
     """
-    Suggest an outfit based on user's location, weather conditions, and user preferences.
+    Suggest an outfit based on user's location, weather conditions.
     """
-    latitude, longitude = get_location(request)
-    weather_data = get_weather_data(latitude, longitude)
-
+    try:
+        profile = request.user.profile
+        if profile.location:
+            latitude, longitude = get_location(request)
+            weather_data = get_weather_data(latitude, longitude)
+        else:
+            # Set default weather data if location is not available
+            weather_data = {
+                "temperature": 20,
+                "humidity": 60,
+                "wind_speed": 10,
+                "weather_condition": "Cloudy"
+            }
+    except ObjectDoesNotExist:
+        # User does not have a profile
+        # Set default weather data
+        weather_data = {
+            "temperature": 20,
+            "humidity": 60,
+            "wind_speed": 10,
+            "weather_condition": "Cloudy"
+        }
     if weather_data:
         temperature = weather_data["temperature"]
         humidity = weather_data["humidity"]
@@ -68,12 +93,15 @@ def suggest_outfit(request):
         # Adjust outfit suggestions based on weather conditions
         if weather_condition in ['Rain', 'Drizzle', 'Thunderstorm', "Clouds"]:
             # Suggest waterproof jacket, boots, and umbrella for rainy weather
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jacket', cloths__waterproof=True)))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jeans')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='boots', cloths__waterproof=True)))
+            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='top').exclude(Q(cloths__subcategory__icontains='t-shirt') | 
+Q(cloths__subcategory__icontains='shirts'))))
+            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory__icontains='t-shirt')))
+            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='bottom')))
+            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='shoes')))
         elif weather_condition == 'Snow':
             # Suggest insulated jacket, snow boots, and gloves for snowy weather
             suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jacket')))
+            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='t-shirt')))
             suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='boots')))
             suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='gloves')))
         elif temperature > 25:
@@ -98,5 +126,5 @@ def suggest_outfit(request):
         updating_items(request,session)
     else:
         suggested_items_data = []
-
-    return render(request, "home.html", {"outfit": suggested_items_data, "con": session})
+        weather_condition = " "
+    return render(request, "home.html", {"outfit": suggested_items_data, "con": weather_condition ,"ids" : session})

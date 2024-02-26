@@ -13,8 +13,10 @@ function updateSubcategories() {
     if (selectedCategory === "top") {
         addOption(subcategorySelect, "t-shirt", "T-Shirt");
         addOption(subcategorySelect, "shirt", "Shirt");
+        addOption(subcategorySelect, "winter jacket", "Winter Jacket");
         addOption(subcategorySelect, "jacket", "Jacket");
         addOption(subcategorySelect, "coat", "Coat");
+        addOption(subcategorySelect, "sweatshirt", "Sweatshirt");
         addOption(subcategorySelect, "hoodie", "Hoodie");
     } else if (selectedCategory === "bottom") {
         addOption(subcategorySelect, "jeans", "Jeans");

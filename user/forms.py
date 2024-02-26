@@ -23,12 +23,4 @@ class CustomUserCreationForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['Profile_image','first_name', 'last_name', 'gender', 'dob']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        required_fields = ['first_name', 'last_name', 'gender', 'dob']
-        for field in required_fields:
-            if not cleaned_data.get(field):
-                raise forms.ValidationError(f"{field} is required.")
-        return cleaned_data
+        fields = ['first_name', 'last_name', 'gender', 'dob']

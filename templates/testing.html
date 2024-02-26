@@ -1,0 +1,6 @@
+{% load static %}
+
+{% for image in images %}
+<img src="data:image/png;base64,{{ image }}" class="img-fluid">
+{% endfor %}
+

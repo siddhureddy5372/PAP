@@ -1,18 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from closet.models import ClosetClothes,User_Cloths
+from closet.models import User_Cloths
 from user.models import Profile
-from .models import Outfit, OutfitClothes
+from .models import Outfit,OutfitClothes
 from django.db import transaction
-from django.db.models import Case, When, IntegerField
 from django.http import HttpResponseBadRequest
+from closet.global_defs import ClosetImageManager
+from .ai_model import get_outfit_recommendation_images
+
+
+
+def test(request):
+    clothes = get_outfit_recommendation_images(request)
+    return render(request, "testing.html",{"images":clothes})
 
 def adding_outfits(request, ids, outfit_name):
     if len(ids) > 2:
         outfit = Outfit.objects.create(user=request.user, name=outfit_name)
-        ids_1 = User_Cloths.objects.filter(pk__in = ids).values_list("cloths_id",flat=True)
-        for item_id in ids_1:
-            outfit.clothes.add(ClosetClothes.objects.get(clothes_id=item_id))
+        for item_id in ids:
+            outfit.clothes.add(item_id)
         outfit.save()
 
 @login_required
@@ -49,19 +55,11 @@ def all_outfits(request):
 @login_required
 def outfit_detail(request, outfit_id):
     outfit = get_object_or_404(Outfit, outfit_id=outfit_id)
-    clothes_ids = outfit.clothes.values_list("clothes_id", flat=True)
-    custom_order = Case(
-        When(category='top', then=Case(
-            When(subcategory='t-shirt', then=1),
-            default=0
-        )),
-        When(category='bottom', then=1),
-        When(category='shoes', then=2),
-        default=3,
-        output_field=IntegerField()
-    )
-    images = ClosetClothes.objects.filter(clothes_id__in=clothes_ids).order_by(custom_order)
-    return render(request, "display_outfit.html", {"images": images, "outfit": outfit})
+    clothes_ids = OutfitClothes.objects.filter(outfit_id=outfit_id).values_list("clothes_id", flat=True)
+    images = ClosetImageManager(request)
+    distinct_user_images = images.images_outfit(clothes_ids)
+    
+    return render(request, "display_outfit.html", {"images": distinct_user_images, "outfit": outfit})
 
 def remove_outfit(request, outfit_id):
     outfit = get_object_or_404(Outfit, user=request.user, outfit_id=outfit_id)

@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 def user_profile_path(instance, filename):
@@ -16,8 +14,3 @@ class Profile(models.Model):
     dob = models.CharField(blank=True, max_length=40, null=True)
     location = models.CharField(blank=True, max_length=254, null=True)
     Profile_image = models.ImageField(upload_to=user_profile_path,null = True)
-
-
-    
-
-

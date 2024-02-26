@@ -8,73 +8,61 @@
     <title>Dress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/cloths.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="vh-100 m-0 p-0">
-    <style>
-        @media (max-width: 576px) {
-            .user-image {
-                width: 50%; /* Adjust the size as needed */
-                margin: 0 auto; /* Center the image */
-            }
-        }
-        
-    </style>
-    <header class="navbar navbar-dark bg-info fixed-top">
-        <div class="fixed-top text-center bg-info p-1"style="color: black;">
-            <h2>DressRight</h2>
+<body class="vh-100 m-0 p-0" style="background-color: #ecece2;">
+    <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
+        <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000;">
+            <a href="/home" >
+                <h2>DressRight</h2>
+            </a> 
         </div>
     </header>
-        <div class="container-fluid mt-3 pt-5">
-            <h1 class="text-center">Outfit</h1>
-<h3> {{con}} </h3>
-            <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()">Wear</a>
-            <div class="image-card">
-                {% for user_cloth_id, image_url in outfit %}
-    {% if user_cloth_id %}
+    <div class="container-fluid mt-3 pt-5">
+        <h1 class="text-center">Outfit</h1>
+        <h3 class="text-center" style="color: grey;">Weather: {{con}} </h3>
+        <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()" style="background-color: #76b0e0;">Wear</a>
         <div class="image-card">
-            <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
-                <img src="{{ image_url.url }}" class="img-fluid">
-            </a>
+            {% for user_cloth_id, image_url in outfit %}
+                {% if user_cloth_id %}
+                    <div class="image-card">
+                        <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                            <img src="{{ image_url.url }}" class="img-fluid" alt="Clothing item">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-    {% endif %}
-{% endfor %}
-            </div>
-        </div>
-        <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
-        <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
-            <div class="container">
-                <div class="row justify-content-around">
-                    <div class="col-3 text-center">
-                        <a href="/home" class="btn btn-light">Home</a>
-                    </div>
-                    <div class="col-3 text-center">
-                        <a href="/cloths" class="btn btn-light">Cloths</a>
-                    </div>
-                    <div class="col-3 text-center">
-                        <a href="/upload" class="btn btn-light">Upload</a>
-                    </div>
-                    <div class="col-3 text-center">
-                        <a href="/profile" class="btn btn-light">Profile</a>
-                    </div>
+    </div>
+    <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
+    <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
+    <footer class="fixed-bottom bg-light p-2 mt-auto" style="width: 100%;">
+        <div class="container">
+            <div class="row justify-content-around">
+                <div class="col-3 text-center">
+                    <a href="/home" class="btn btn-secondary"><i style="color:#95c9f4" class="fa fa-home fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/cloths" class="btn btn-light"><i style="color:#95c9f4" class="fa fa-suitcase fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/upload" class="btn btn-light"><i style="color:#95c9f4" class="fa fa-upload fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/profile" class="btn btn-light"><i style="color:#95c9f4" class="fa fa-user fa-2x"></i></a>
                 </div>
             </div>
         </div>
+    </footer>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script>
         function showConfirmationPopup() {
-            // Display a prompt dialog to get the name of the outfit
             var outfitName = prompt("Enter the name of the outfit:");
-    
-            // Check if the user entered a name
             if (outfitName !== null) {
-                // If the user entered a name, redirect to the 'worn' URL with the outfit name as a query parameter
                 window.location.href = `/worn/${encodeURIComponent(outfitName)}/`;
-
-            } else {
-                // If the user clicked cancel or didn't enter a name, do nothing
-                // You can provide alternative action here if needed
             }
         }
     </script>

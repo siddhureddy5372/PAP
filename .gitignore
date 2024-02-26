@@ -8,6 +8,8 @@
 
 /.env
 
+/outfit/ai_model.py
+
 /static
 
 

@@ -32,11 +32,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="image-card">
-                    {% for item in images %}
-                        {% if item.pk %}
-                            <a href="{% url 'cloths_detail' item_id=item.pk %}">
-                                <img src="{{ item.image.url }}" class="img-fluid">
-                            </a>
+                    {% for user_cloth_id, image_url in images %}
+                        {% if user_cloth_id %}
+                            <div class="image-card">
+                                <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                                    <img src="/media/{{ image_url }}" class="img-fluid">
+                                </a>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </div>
