@@ -1,21 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import ClosetClothes, User_Cloths
 from .forms import ImageUploadForm,AIDetectionForm
 from .capsule_closet import ImageHandler
 from closet.global_defs import ClosetImageManager
-
+from closet.models import User_Cloths
+from closet.global_defs import ClosetImageManager,ManageParameters
+from .setup_cache import Caching
 
 
 
 def remove_clothing(request,cloth_id):
-    clothing_id = cloth_id
     try:
         # Check if the user has the specified clothing item
-        user_clothing = User_Cloths.objects.get(pk = clothing_id,user_id = request.user.id)
-        # Delete the association between the user and the clothing item
-        user_clothing.is_active = False
-        user_clothing.save()
+        manage = ManageParameters(request)
+        manage.change_par(User_Cloths, cloth_id,is_active = 0)
     except User_Cloths.DoesNotExist:
         pass
     return redirect('cloths')
@@ -25,13 +24,17 @@ def remove_clothing(request,cloth_id):
 @login_required
 def upload(request):
     if request.method == "POST":
+        images = ClosetImageManager(request)
         form = ImageUploadForm(request.user, request.POST, request.FILES)
         if ImageHandler.handle_image_upload(request, form):
+            images.get_images(update=True)
             return redirect("upload")
     else:
         form = ImageUploadForm(request.user)
 
     return render(request, "upload.html", {"form": form})
+
+
 
 @login_required
 def test(request):
@@ -58,13 +61,16 @@ def restore(request):
     return render(request,"restore_clothes.html",{"clothes":distinct_user_images})
 
 def restoring(request,item_id):
-    item = get_object_or_404(User_Cloths,user = request.user,pk = item_id)
-    item.is_active = True
-    item.save()
+    try:
+        # Check if the user has the specified clothing item
+        manage = ManageParameters(request)
+        manage.change_par(User_Cloths, item_id,is_active = 1)
+    except User_Cloths.DoesNotExist:
+        pass
     return redirect("restore")
 
 def cloths_detail(request, item_id):
-    item = get_object_or_404(ClosetClothes, user_cloths__pk=item_id)
-    cloth = get_object_or_404(User_Cloths,pk = item_id)
-    return render(request, "cloth_detail.html", {"item": item,"cloth" : cloth})
+    manage = Caching(request)
+    data = manage.get_cloth(item_id)
+    return render(request, "cloth_detail.html", {"item": data})
 

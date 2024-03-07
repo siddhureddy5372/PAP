@@ -19,6 +19,9 @@ class CustomUserCreationForm(UserCreationForm):
 
         return password2
 
+    def validate_password(self, password):
+        # Overriding this method to bypass default password validation
+        return password
     
 class ProfileForm(forms.ModelForm):
     class Meta:

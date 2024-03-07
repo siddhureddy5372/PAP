@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outfit Display</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<bodyclass="vh-100 m-0 p-0">
-    <header class="navbar navbar-dark bg-info fixed-top">
-        <div class="fixed-top text-center bg-info p-1" style="color: black; z-index: 1;">
-            <h2>DressRight</h2>
+<body class="vh-100 m-0 p-0" style="background-color: #ecece2; /* 60% white */">
+    <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
+        <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000;">
+            <a href="/home" class="btn"> <h2>DressRight</h2></a>
         </div>
     </header>
     
@@ -25,22 +24,38 @@
     
     <div class="container-fluid mt-3 pt-5" style="position: relative; z-index: 2;">
         <h1 class="p-2">{{ outfit.name }} Outfit</h1>
-        <button type="button" class="btn btn-danger remove-button" id="removeButton">Remove</button>
+        <button type="button" class="btn remove-button" style="background-color: #007bff;color: white;" id="removeButton">Remove</button>
     </div>
     
-    
+    <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <div class="image-card">
-                    {% for user_cloth_id, image_url in images %}
-                        {% if user_cloth_id %}
-                            <div class="image-card">
-                                <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
-                                    <img src="/media/{{ image_url }}" class="img-fluid">
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+            {% for user_cloth_id, image_url in images %}
+                {% if user_cloth_id %}
+                <div class="col-md-3">
+                    <div class="image-card mb-3">
+                        <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                            <img src="/media/{{ image_url }}" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
+        <div class="container">
+            <div class="row justify-content-around">
+                <div class="col-3 text-center">
+                    <a href="/home" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-home fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/cloths" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-suitcase fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/upload" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-upload fa-2x"></i></a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="/profile" class="btn btn-secondary"><i style="color: #95c9f4;" class="fa fa-user fa-2x"></i></a>
                 </div>
             </div>
         </div>

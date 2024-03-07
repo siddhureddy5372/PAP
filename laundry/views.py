@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from closet.models import ClosetClothes,User_Cloths
+from closet.models import User_Cloths
 from closet.global_defs import ClosetImageManager,ManageParameters
 
 def laundry(request):

@@ -1,13 +1,14 @@
-from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth.models import User, auth
+from django.shortcuts import render,redirect
+from django.contrib.auth.models import auth
 from django.contrib import messages
-from django.contrib.auth import logout
-from closet.models import ClosetClothes
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 from .forms import CustomUserCreationForm,ProfileForm
 from .models import Profile
+from django.core.cache import cache
+from closet.setup_cache import Caching
 
-
+@ csrf_protect
 def login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -29,6 +30,7 @@ def login(request):
     
     return render(request, "login.html")
 
+@ csrf_protect
 @login_required
 def create_profile(request):
     if request.method == "POST":
@@ -47,6 +49,7 @@ def create_profile(request):
 
 @login_required
 def edit_profile(request):
+    manage = Caching(request)
     user_profile = Profile.objects.get(user=request.user)
     
     if request.method == 'POST':
@@ -55,6 +58,7 @@ def edit_profile(request):
             profile = form.save(commit=False)
             profile.user = request.user  # Set the user field
             profile.save()
+            manage.get_profile("update")
             return redirect("profile")
     else:
         form = ProfileForm(instance=user_profile)
@@ -63,7 +67,7 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', context)
 
 
-
+@ csrf_protect
 def register(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -84,6 +88,6 @@ def logout(request):
 
 @login_required
 def profile(request):
-    user_id = request.user.id
-    user_profile = Profile.objects.get(user=user_id)
+    manage = Caching(request)
+    user_profile = manage.get_profile("get")
     return render(request,"profile.html",{"user" : user_profile})

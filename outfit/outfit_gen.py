@@ -5,8 +5,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from closet.models import User_Cloths
 from user.models import Profile
+
 
 def choose_random_item(items):
     """
@@ -26,26 +28,33 @@ def get_location(request):
     location = user_profile.location.split(",")
     return location[0], location[1]
 
-def get_weather_data(latitude, longitude):
+def get_weather_data(request,latitude, longitude):
     """
     Retrieve weather data from an external API based on latitude and longitude.
     """
-    api_key = os.environ.get("OPENWEATHERMAP_API_KEY")
-    url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=metric&appid={api_key}"
+    cache_key = f"{request.user.id}_weather_data"
+    if cache.get(cache_key):
+        print("from cache")
+        return cache.get(cache_key)
+    else:
+        api_key = os.environ.get("OPENWEATHERMAP_API_KEY")
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=metric&appid={api_key}"
 
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
-        data = response.json()
-        weather_data = {
-            "temperature": data["main"]["temp"],
-            "humidity": data["main"]["humidity"],
-            "wind_speed": data["wind"]["speed"],
-            "weather_condition": data["weather"][0]["main"]
-        }
-        return weather_data
-    except requests.RequestException as e:
-        return None
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
+            data = response.json()
+            weather_data = {
+                "temperature": data["main"]["temp"],
+                "humidity": data["main"]["humidity"],
+                "wind_speed": data["wind"]["speed"],
+                "weather_condition": data["weather"][0]["main"]
+            }
+            print("storing data")
+            cache.set(cache_key,weather_data,timeout= 2000)
+            return weather_data
+        except requests.RequestException as e:
+            return None
 
 
 
@@ -60,7 +69,7 @@ def suggest_outfit(request):
         profile = request.user.profile
         if profile.location:
             latitude, longitude = get_location(request)
-            weather_data = get_weather_data(latitude, longitude)
+            weather_data = get_weather_data(request,latitude, longitude)
         else:
             # Set default weather data if location is not available
             weather_data = {

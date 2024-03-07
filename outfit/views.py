@@ -10,6 +10,7 @@ from .ai_model import get_outfit_recommendation_images
 
 
 
+
 def test(request):
     clothes = get_outfit_recommendation_images(request)
     return render(request, "testing.html",{"images":clothes})
@@ -29,9 +30,9 @@ def store_location(request):
         user_profile = get_object_or_404(Profile, user=request.user)
         user_profile.location = f"{latitude},{longitude}"
         user_profile.save()
-        return redirect("home")
+        return redirect("profile")
     else:
-        return render(request, "get_location.html")
+        return redirect("profile")
 
 @login_required
 def worn(request, outfit_name=None):
@@ -57,7 +58,8 @@ def outfit_detail(request, outfit_id):
     outfit = get_object_or_404(Outfit, outfit_id=outfit_id)
     clothes_ids = OutfitClothes.objects.filter(outfit_id=outfit_id).values_list("clothes_id", flat=True)
     images = ClosetImageManager(request)
-    distinct_user_images = images.images_outfit(clothes_ids)
+    print(clothes_ids)
+    distinct_user_images = images.images(user_cloths__pk__in = clothes_ids)
     
     return render(request, "display_outfit.html", {"images": distinct_user_images, "outfit": outfit})
 
