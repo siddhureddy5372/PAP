@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             /* Custom CSS for button */
             .nice-button {
@@ -28,10 +28,10 @@
           </style>
 </head>
 
-<body class="vh-100 m-0 p-0">
-    <header class="navbar navbar-dark bg-info fixed-top">
-        <div class="fixed-top text-center bg-info p-1" style="color: black; z-index: 1;">
-            <h2>DressRight</h2>
+<body class="vh-100 m-0 p-0"style="background-color: white; /* 60% white */">
+    <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
+        <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000;">
+            <a href="/home" class="btn"> <h2>DressRight</h2></a>
         </div>
     </header>
     <div class="container-fluid mt-3 pt-5" style="position: relative; z-index: 2;">
@@ -43,10 +43,12 @@
                 <div class="card p-4">
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="mb-4">
-                            <img src="{{ user.Profile_image.url }}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block">
-                        </div>
-                        <div>
+                        <p>Image:</p>
+                        {% if form.Profile_image.value %}
+                            <img src="{{ form.Profile_image.value.url }}" alt="User Image" class="img-fluid rounded-circle user-image mx-auto d-block" style="max-width: 30%;">
+                        {% endif %}
+                        <input type="file" name="Profile_image" accept="image/*" id="id_Profile_image">
+                        
                             <p><strong>First Name:</strong> {{ form.first_name }}</p>
                             <p><strong>Last Name:</strong> {{ form.last_name }}</p>
                             <p><strong>Gender:</strong> {{ form.gender }}</p>
@@ -60,20 +62,20 @@
 </div>
 </div>
 </div>
-<div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
+<<div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
     <div class="container">
         <div class="row justify-content-around">
             <div class="col-3 text-center">
-                <a href="/home" class="btn btn-light">Home</a>
+                <a href="/home" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-home fa-2x"></i></a>
             </div>
             <div class="col-3 text-center">
-                <a href="/cloths" class="btn btn-light">Cloths</a>
+                <a href="/cloths" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-suitcase fa-2x"></i></a>
             </div>
             <div class="col-3 text-center">
-                <a href="/upload" class="btn btn-light">Upload</a>
+                <a href="/upload" class="btn btn-light"><i style="color: #95c9f4;" class="fa fa-upload fa-2x"></i></a>
             </div>
             <div class="col-3 text-center">
-                <a href="/profile" class="btn btn-light">Profile</a>
+                <a href="/profile" class="btn btn-secondary"><i style="color: #95c9f4;" class="fa fa-user fa-2x"></i></a>
             </div>
         </div>
     </div>

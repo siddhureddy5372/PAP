@@ -95,10 +95,10 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis server address
+        'BACKEND': os.getenv("CACHE_BACKEND"),
+        'LOCATION': os.getenv("CACHE_LOCATION"),  # Redis server address
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CLIENT_CLASS': os.getenv("CACHE_CLIENT_CLASS"),
         }
     }
 }

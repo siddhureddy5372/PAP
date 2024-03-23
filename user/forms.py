@@ -24,6 +24,20 @@ class CustomUserCreationForm(UserCreationForm):
         return password
     
 class ProfileForm(forms.ModelForm):
+    GENDER_CHOICES = (
+        ('male', 'Male'),
+        ('female', 'Female'),
+    )
+    
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
+
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'gender', 'dob']
+        fields = ["Profile_image", 'first_name', 'last_name', 'gender', 'dob']
+
+        widgets = {
+            'Profile_image': forms.FileInput(attrs={'class': 'form-control',"required":False}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'required': False}),  
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'required': False}),  
+            'dob': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'required': False}), 
+        }

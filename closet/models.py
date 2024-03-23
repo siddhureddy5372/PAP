@@ -26,6 +26,7 @@ class User_Cloths(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, models.CASCADE, blank=True, null=True)
     cloths = models.ForeignKey(ClosetClothes, models.CASCADE, blank=True, null=True)
+    deleted_date = models.DateTimeField(blank = True,null = True)
     worn_count = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 

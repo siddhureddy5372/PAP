@@ -22,11 +22,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card p-4">
-                    <form method="POST" action="{% url 'create_profile' %}">
+                    <form method="POST" action="{% url 'create_profile' %}" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div>
                             {% for field in profile.visible_fields %}
-                                {% if field.name != 'location' %}
+                                {% if field.name != 'location' and field.name != 'gender' %}
                                     <div class="mb-3">
                                         {{ field.label_tag }}
                                         {{ field }}
@@ -40,6 +40,11 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
+                            
+                            <div class="mb-3">
+                                {{ profile.gender.label_tag }}
+                                {{ profile.gender }}
+                            </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-md-6 text-center">
@@ -54,6 +59,7 @@
             </div>
         </div>
     </div>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

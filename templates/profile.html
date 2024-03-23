@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body class="vh-100 m-0 p-0" style="background-color: #ecece2; /* 60% white */">
+<body class="vh-100 m-0 p-0" style="background-color: white; /* 60% white */">
     <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
         <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000;">
             <a href="/home" class="btn"> <h2>DressRight</h2></a>
@@ -35,7 +35,6 @@
                 <div class="card h-100 mb-3">
                     <div class="card-body" style="background-color: #eeeee9;">
                         <h3 class="card-title">User: {{ user.user.username }}</h3>
-                        <p class="card-text"><strong>Email:</strong> {{ user.user.email }}</p>
                         <p class="card-text"><strong>Date of Birth:</strong> {{ user.dob }}</p>
                         <p class="card-text"><strong>First Name:</strong> {{ user.first_name }}</p>
                         <p class="card-text"><strong>Last Name:</strong> {{ user.last_name }}</p>
@@ -80,7 +79,7 @@
         </div>
             
     </div>
-    <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
+    <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
     <footer>
     <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
         <div class="container">

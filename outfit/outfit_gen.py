@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from closet.models import User_Cloths
 from user.models import Profile
+#from closet.setup_cache import Caching
 
 
 def choose_random_item(items):
@@ -24,9 +25,18 @@ def get_location(request):
     """
     Retrieve user's latitude and longitude from their profile location.
     """
-    user_profile = Profile.objects.get(user=request.user)
-    location = user_profile.location.split(",")
-    return location[0], location[1]
+    cache_key = f"{request.user.id}_location"
+    cache_data = cache.get(cache_key)
+    if cache_data:
+        print("FROM CACHE")
+        location = cache_data.split(",")
+        return location[0],location[1]
+    else:
+        print("FROM DB")
+        user_profile = Profile.objects.get(user=request.user)
+        cache.set(cache_key,user_profile.location,timeout=2000)
+        location = user_profile.location.split(",")
+        return location[0], location[1]
 
 def get_weather_data(request,latitude, longitude):
     """
@@ -34,7 +44,7 @@ def get_weather_data(request,latitude, longitude):
     """
     cache_key = f"{request.user.id}_weather_data"
     if cache.get(cache_key):
-        print("from cache")
+        print("from Cache")
         return cache.get(cache_key)
     else:
         api_key = os.environ.get("OPENWEATHERMAP_API_KEY")
@@ -65,6 +75,7 @@ def suggest_outfit(request):
     """
     Suggest an outfit based on user's location, weather conditions.
     """
+    cache_key = f"{request.user.id}_outfit"
     try:
         profile = request.user.profile
         if profile.location:
@@ -79,19 +90,20 @@ def suggest_outfit(request):
                 "weather_condition": "Cloudy"
             }
     except ObjectDoesNotExist:
+        pass
         # User does not have a profile
         # Set default weather data
-        weather_data = {
-            "temperature": 20,
-            "humidity": 60,
-            "wind_speed": 10,
-            "weather_condition": "Cloudy"
-        }
+    weather_data = {
+        "temperature": 20,
+        "humidity": 60,
+        "wind_speed": 10,
+        "weather_condition": "Clouds"
+    }
     if weather_data:
         temperature = weather_data["temperature"]
         humidity = weather_data["humidity"]
         wind_speed = weather_data["wind_speed"]
-        weather_condition = weather_data["weather_condition"]
+        weather_condition = "Clouds"
 
         # Retrieve user's clothing items
         user_clothes = User_Cloths.objects.filter(user=request.user, worn_count__lt=4,is_active = True)
@@ -132,8 +144,10 @@ Q(cloths__subcategory__icontains='shirts'))))
             if item:
                 suggested_items_data.append((item.id, item.cloths.image))
                 session.append(item.id)
-        updating_items(request,session)
+        #updating_items(request,session)
+        cache.delete(cache_key)
+        cache.set(cache_key,session,timeout=200)
     else:
         suggested_items_data = []
         weather_condition = " "
-    return render(request, "home.html", {"outfit": suggested_items_data, "con": weather_condition ,"ids" : session})
+    return render(request, "home.html", {"outfit": suggested_items_data, "con": weather_condition})

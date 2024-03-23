@@ -9,20 +9,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        .image-container img {
-            max-width: 60%;
-            max-height: 60%;
-            width: auto;
-            height: auto;
-        }
+        .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ensures the container takes up the full height */
+}
+
     /* Custom CSS for button */
     .nice-button {
       background-color: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      font-size: 16px;
+      border-radius: 10%;
+      padding: 2% 4%;
+      font-size: 3.2vw;
       cursor: pointer;
       transition: background-color 0.3s;
     }
@@ -33,7 +34,7 @@
     </style>
     <title>Cloths Detail</title>
 </head>
-<body class="vh-100 m-0 p-0" style="background-color: #ecece2;">
+<body class="vh-100 m-0 p-0" style="background-color: white;">
     <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
         <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000; /* 30% grey */ z-index: 1;">
             <a href="/home" class="btn"> <h2>DressRight</h2></a>
@@ -45,24 +46,24 @@
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6 order-md-1">
+            <div class="col-md-6 order-md-1 d-flex justify-content-center align-items-center">
                 <div class="image-container ">
-                    <img src="/media/{{ item.1 }}" alt="{{ item.2 }}" class="img-fluid rounded w-100 mb-4">
+                    <img src="/media/{{ item.image }}" alt="{{ item.2 }}" class="img-fluid rounded w-100 mb-4">
                 </div>
             </div>
             <div class="col-md-6 order-md-2 mt-5">
-                <h2><strong>Brand:</strong> {{ item.3 }}</h2>
+                <h2><strong>Brand:</strong> {{ item.brand }}</h2>
         
-                <p><strong>Color:</strong> {{ item.2 }}</p>
-                <p><strong>Category:</strong> {{ item.1 }}</p>
-                <p><strong>Subcategory:</strong> {{ item.0}}</p>
-                <p><strong>Worn Count:</strong> {{ item.1 }}</p>
+                <p><strong>Color:</strong> {{ item.color }}</p>
+                <p><strong>Category:</strong> {{ item.category }}</p>
+                <p><strong>Subcategory:</strong> {{ item.subcategory}}</p>
+                <p><strong>Worn Count:</strong> {{ item.worn_count }}</p>
                 <!-- Remove Button -->
                 <button type="button" class="nice-button" id="removeButton">Remove</button>
             </div>
         </div>
     </div>
-   <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
+   <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
 
    <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
     <div class="container">
@@ -83,7 +84,15 @@
     </div>
 </div>
 
-
+    <script>
+        document.getElementById("removeButton").addEventListener("click", function() {
+            if (confirm("Are you sure you want to remove this clothing item?")) {
+                const myID = '{{id}}';
+                const url = `/remove/${myID}/`; // Adjust the URL pattern as needed
+                window.location.href = url;
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
             crossorigin="anonymous"></script>
