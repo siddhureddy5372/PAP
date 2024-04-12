@@ -44,7 +44,6 @@ class Caching():
         cache_key = f"{self.request.user.id}_profile"
         if type_ == "get":
             if cache.get(cache_key):
-                print("FROM CACHE")
                 return cache.get(cache_key)
         try:
             user_id = self.request.user.id
@@ -52,10 +51,9 @@ class Caching():
         except ObjectDoesNotExist:
             return None
 
-        print("FROM DB")
         if type_ == "update":
             cache.delete(cache_key)
-        cache.set(cache_key,user_profile)
+        cache.set(cache_key,user_profile,timeout=1000)
         return user_profile
         
 

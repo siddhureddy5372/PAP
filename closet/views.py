@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from .models import ClosetClothes, User_Cloths
 from .forms import ImageUploadForm,AIDetectionForm
 from .capsule_closet import ImageHandler
-from closet.global_defs import ClosetImageManager
 from closet.models import User_Cloths
 from closet.global_defs import ClosetImageManager,ManageParameters
 from .setup_cache import Caching
@@ -89,16 +88,6 @@ def find_match(request):
 
 
 def remove_clothing(request,cloth_id):
-    ''' view to remove cloth from user closet.
-
-        Args:
-            request: HTTP request object.
-            cloth_id: id of the cloth to be removed.
-
-        Returns:
-            Redirects to the user's closet page after removal.
-    '''
-
     try:
         # Check if the user has the specified clothing item
         manage = ManageParameters(request)

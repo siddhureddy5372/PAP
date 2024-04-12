@@ -20,7 +20,7 @@
     }
 }
     </style>
-<body class="vh-100 m-0 p-0" style="background-color: #ecece2;">
+<body class="vh-100 m-0 p-0" style="background-color: white;">
     <header class="navbar navbar-dark fixed-top" style="background-color: #76b0e0;">
         <div class="fixed-top text-center p-1" style="background-color: #76b0e0;color: #000000; /* 30% grey */ z-index: 1;">
             <a href="/home" class="btn"> <h2>DressRight</h2></a>
@@ -31,18 +31,17 @@
     </div>
     <div class="image-container mt-5">
         {% for user_cloth_id, image_url in user_images %}
-    {% if user_cloth_id %}
-        <div class="image-card">
-            <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
-                <img src="/media/{{ image_url }}" class="img-fluid">
-            </a>
-        </div>
-    {% endif %}
-{% endfor %}
-
+            {% if user_cloth_id %}
+                <div class="image-card">
+                    <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                        <img src="/media/{{ image_url }}" class="img-fluid">
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
-    <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
-    <h3 style="color: #ecece2;">© 2024 DressRight. All rights reserved.</h3>
+    <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
+    <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
     <div class="fixed-bottom bg-light p-2 mt-auto" style="position: fixed; bottom: 0; width: 100%; z-index: 3;">
         <div class="container">
             <div class="row justify-content-around">

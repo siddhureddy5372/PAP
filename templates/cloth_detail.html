@@ -87,8 +87,8 @@
     <script>
         document.getElementById("removeButton").addEventListener("click", function() {
             if (confirm("Are you sure you want to remove this clothing item?")) {
-                const myID = '{{id}}';
-                const url = `/remove/${myID}/`; // Adjust the URL pattern as needed
+                const myID = '{{id}}'; // Get Cloths_id
+                const url = `/remove/${myID}/`; // Build the url with cloths_id
                 window.location.href = url;
             }
         });

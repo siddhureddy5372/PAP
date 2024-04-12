@@ -21,6 +21,7 @@
         <h3 class="text-center" style="color: grey;">Weather: {{con}} </h3>
         <a href="#" class="btn btn-light d-block mx-auto mb-3" onclick="showConfirmationPopup()" style="background-color: #76b0e0;">Wear</a>
         <div class="image-card">
+            {% if not change %}
             {% for user_cloth_id, image_url in outfit %}
                 {% if user_cloth_id %}
                     <div class="image-card">
@@ -30,6 +31,17 @@
                     </div>
                 {% endif %}
             {% endfor %}
+            {% else %}
+            {% for user_cloth_id, image_url in outfit %}
+                {% if user_cloth_id %}
+                    <div class="image-card">
+                        <a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
+                            <img src="/media/{{ image_url }}" class="img-fluid" alt="Clothing item">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% endif%}
         </div>
     </div>
     <h3 style="color: white;">© 2024 DressRight. All rights reserved.</h3>
@@ -59,7 +71,7 @@
     <script>
         function showConfirmationPopup() {
             var outfitName = prompt("Enter the name of the outfit:");
-            if (outfitName !== null) {
+            if (outfitName) {
                 window.location.href = `/worn/${encodeURIComponent(outfitName)}/`;
             }
         }

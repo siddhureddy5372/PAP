@@ -9,7 +9,7 @@ from django.core.cache import cache
 from closet.models import User_Cloths
 from user.models import Profile
 #from closet.setup_cache import Caching
-
+from .ai_model import get_outfit_recommendation_images
 
 def choose_random_item(items):
     """
@@ -38,15 +38,27 @@ def get_location(request):
         location = user_profile.location.split(",")
         return location[0], location[1]
 
-def get_weather_data(request,latitude, longitude):
+def get_weather_data(request):
     """
     Retrieve weather data from an external API based on latitude and longitude.
     """
-    cache_key = f"{request.user.id}_weather_data"
+    cache_key = f"weather_data"
     if cache.get(cache_key):
-        print("from Cache")
-        return cache.get(cache_key)
+        cache_data = cache.get(cache_key)
+        return cache_data["temperature"],cache_data["weather_condition"]
     else:
+        try:
+            profile = request.user.profile
+            if profile.location:
+                latitude, longitude = get_location(request)   
+            else:
+                # Set default weather data if location is not available
+                return 20,"Cloudy0"
+        except ObjectDoesNotExist:
+            # User does not have a profile
+            # Set default weather data
+            return 20,"Cloudy7"
+        
         api_key = os.environ.get("OPENWEATHERMAP_API_KEY")
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=metric&appid={api_key}"
 
@@ -60,12 +72,23 @@ def get_weather_data(request,latitude, longitude):
                 "wind_speed": data["wind"]["speed"],
                 "weather_condition": data["weather"][0]["main"]
             }
-            print("storing data")
             cache.set(cache_key,weather_data,timeout= 2000)
-            return weather_data
+            return weather_data["temperature"],weather_data["weather_condition"]
         except requests.RequestException as e:
-            return None
+            return 20,"Cloudy77"
 
+
+def select_cloths(data, **kwargs):
+    items_1 = []
+    for key, value in kwargs.items():
+        if isinstance(value, list):
+            for val in value:
+                filtered_data = data.filter(**{key: val})
+                items_1.append(choose_random_item(filtered_data))
+        else:
+            filtered_data = data.filter(**{key: value})
+            items_1.append(choose_random_item(filtered_data))
+    return items_1
 
 
 
@@ -75,79 +98,54 @@ def suggest_outfit(request):
     """
     Suggest an outfit based on user's location, weather conditions.
     """
+    # Build cache key to store latest outfit generated cloth id's
     cache_key = f"{request.user.id}_outfit"
-    try:
-        profile = request.user.profile
-        if profile.location:
-            latitude, longitude = get_location(request)
-            weather_data = get_weather_data(request,latitude, longitude)
-        else:
-            # Set default weather data if location is not available
-            weather_data = {
-                "temperature": 20,
-                "humidity": 60,
-                "wind_speed": 10,
-                "weather_condition": "Cloudy"
-            }
-    except ObjectDoesNotExist:
-        pass
-        # User does not have a profile
-        # Set default weather data
-    weather_data = {
-        "temperature": 20,
-        "humidity": 60,
-        "wind_speed": 10,
-        "weather_condition": "Clouds"
-    }
-    if weather_data:
-        temperature = weather_data["temperature"]
-        humidity = weather_data["humidity"]
-        wind_speed = weather_data["wind_speed"]
-        weather_condition = "Clouds"
+    cache_key_1 = f"{request.user.id}_clothes"
+    suggested_items_data = None
+    # Save suggested items to session for later use
+    session = []
+    if (random.randint(0,2) != 0) and cache.get(cache_key_1):
+        suggested_items_data,session = get_outfit_recommendation_images(request)
+        change = True
+
+    
+    if not suggested_items_data:
+        change = False
+        temperature,weather_condition = get_weather_data(request)
 
         # Retrieve user's clothing items
         user_clothes = User_Cloths.objects.filter(user=request.user, worn_count__lt=4,is_active = True)
 
         # Define weather-based outfit suggestions
         suggested_items = []
-
+        print(type(temperature))
         # Adjust outfit suggestions based on weather conditions
         if weather_condition in ['Rain', 'Drizzle', 'Thunderstorm', "Clouds"]:
             # Suggest waterproof jacket, boots, and umbrella for rainy weather
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='top').exclude(Q(cloths__subcategory__icontains='t-shirt') | 
-Q(cloths__subcategory__icontains='shirts'))))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory__icontains='t-shirt')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='bottom')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__category='shoes')))
+            suggested_items.append(select_cloths(user_clothes,cloths__subcategory=["coat",'t-shirt',"jeans","boots"]))       
+            
         elif weather_condition == 'Snow':
             # Suggest insulated jacket, snow boots, and gloves for snowy weather
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jacket')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='t-shirt')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='boots')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='gloves')))
-        elif temperature > 25:
+            suggested_items.append(select_cloths(user_clothes,cloths__subcategory =['winter jacket', 'hoodies', 'jeans', 'boots']))
+        elif 10 <= temperature <= 25:
             # Suggest light clothing for hot weather
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='t-shirt')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='joggers')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='sneakers')))
+            suggested_items.append(select_cloths(user_clothes,cloths__subcategory = ['t-shirt', 'joggers', 'sneakers']))
         elif temperature < 10:
+            print("jf")
             # Suggest warm clothing for cold weather
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jacket')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='hoodies')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='jeans')))
-            suggested_items.append(choose_random_item(user_clothes.filter(cloths__subcategory='sneakers')))
+            suggested_items.append(select_cloths(user_clothes,cloths__subcategory = ['jacket', 'hoodies', 'jeans', 'sneakers']))
+        else:
+            suggested_items.append(select_cloths(user_clothes,cloths__subcategory=["t-shirt","shorts","sneakers"]))
 
-        # Save suggested items to session for later use
-        session = []
         suggested_items_data = []
-        for item in suggested_items:
+        for item in suggested_items[0]:
             if item:
                 suggested_items_data.append((item.id, item.cloths.image))
                 session.append(item.id)
-        #updating_items(request,session)
         cache.delete(cache_key)
         cache.set(cache_key,session,timeout=200)
     else:
-        suggested_items_data = []
-        weather_condition = " "
-    return render(request, "home.html", {"outfit": suggested_items_data, "con": weather_condition})
+        cache.delete(cache_key)
+        cache.set(cache_key,session,timeout=200)
+        weather_condition = "Clouds"
+    return render(request, "home.html", {"outfit": suggested_items_data, "con": weather_condition,"change": change})

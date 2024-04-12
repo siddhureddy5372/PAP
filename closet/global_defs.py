@@ -2,7 +2,7 @@ from closet.models import ClosetClothes
 from django.db.models import Case, When, IntegerField, Count
 from django.db.models import Q
 from django.core.cache import cache
-
+from django.core.files.images import ImageFile
 class ClosetImageManager:
     """
     Class for managing images and caching.
@@ -126,10 +126,9 @@ class ClosetImageManager:
 
         # Delete existing cache data and store the formatted data in cache with a timeout of 300 seconds (5 minutes)
         cache.delete(cache_key)
-        cache.set(cache_key, queryset_dict_list, timeout=300)
+        cache.set(cache_key, queryset_dict_list, timeout=1000)
         # Return the original queryset values
         return queryset_values
-
 
 
     def images_restore(self, **kwargs):

@@ -1,8 +1,0 @@
-{% load static %}
-
-{% for user_cloth_id,image in images %}
-<a href="{% url 'cloths_detail' item_id=user_cloth_id %}">
-    <img src="/media/{{ image }}" class="img-fluid">
-</a>
-{% endfor %}
-

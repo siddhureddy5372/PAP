@@ -34,7 +34,7 @@
     {% if user_cloth_id %}
         <div class="image-card">
             <a href="{% url 'reset' item_id=user_cloth_id %}">
-                <img src="/media/{{ image_url }}" class="img-fluid">
+                <img src="/media/{{ image_url }}" class="img-fluid" id = "images">
             </a>
         </div>
     {% endif %}
@@ -61,7 +61,24 @@
         </div>
     </div>
 </div>
-
+    <script>// Select all image elements with the class "img-fluid"
+        const imageElements = document.querySelectorAll(".img-fluid");
+        
+        // Loop through each image element
+        imageElements.forEach(function(imageElement) {
+            // Attach click event listener to the current image element
+            imageElement.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default link behavior
+                if (confirm("Are you sure you have washed this clothing item?")) {
+                    // Get the href attribute value of the parent anchor element
+                    const href = imageElement.parentNode.getAttribute("href");
+                    const url = href; // Use the href directly as the URL
+                    window.location.href = url; // Redirect to the URL
+                }
+            });
+        });
+        
+        </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

@@ -29,6 +29,10 @@
     <div class="container-fluid mt-3 pt-5" style="position: relative; z-index: 2;">
         <h1 class="text-center">All Outfit</h1>
     </div>
+    {% for message in messages %}
+                <h2 style="color: red;">{{ message }}</h2><br>
+                {% endfor %}
+
     <div class="image-container mt-5">
     {% for outfit in outfits %}
             {% if outfit.pk %}

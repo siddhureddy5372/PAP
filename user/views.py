@@ -66,6 +66,7 @@ def create_profile(request):
         if profile_form.is_valid():
             profile = profile_form.save(commit=False)
             profile.user = user
+            profile.location = "40.03555433333333,-8.820991666666666"
             profile.save()
             return redirect("home")
         else:
@@ -100,6 +101,7 @@ def edit_profile(request):
         if form.is_valid():
             profile = form.save(commit=False)
             profile.user = request.user  # Set the user field
+            profile.location = "40.03555433333333,-8.820991666666666"
             profile.save()
             # After the changes update the cache of profile
             manage.get_profile("update")
@@ -146,15 +148,6 @@ def logout(request):
 
 @login_required
 def profile(request):
-    ''' This returns the profile of the user taking from cache if exist or from db.
-    
-        Args:
-            request: HTTP request object.
-
-        Returns:
-            User_profile: an object with attributes.
-    '''
-
     manage = Caching(request)
     # Retreives the profile from cache
     user_profile = manage.get_profile("get")
