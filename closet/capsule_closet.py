@@ -138,7 +138,7 @@ class ImageHandler:
 
     @staticmethod
     def get_info(image_data):
-        api_token = os.environ.get("XIMILAR_API_TOKEN")  # Your Ximilar API token
+        api_token = os.environ.get("XIMILAR_API_TOKEN")  # My Ximilar API token
         fashion_client = FashionTaggingClient(token=api_token)
         result = fashion_client.detect_tags(image_data)
         category, subcategory, color = ImageHandler.parse_tags(result)

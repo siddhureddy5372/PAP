@@ -141,8 +141,10 @@ def ai_upload(request):
         Redirects to the AI upload page after processing.
     """
     if request.method == "POST":
+        images = ClosetImageManager(request)
         form = AIDetectionForm(request.user,request.POST, request.FILES)
         if ImageHandler.handle_image_upload_with_ai(request, form):
+            images.get_images(update=True)
             return redirect("ai")
     else:
         form = AIDetectionForm(request.user)
@@ -173,16 +175,6 @@ def restore(request):
     return render(request,"restore_clothes.html",{"clothes":distinct_user_images})
 
 def restoring(request,item_id):
-    """
-    View for restoring a previously removed item.
-
-    Args:
-        request: HTTP request object.
-        item_id: ID of the item to be restored.
-
-    Returns:
-        Redirects to the restore page after restoration.
-    """
     try:
         # Check if the user has the specified clothing item
         manage = ManageParameters(request)

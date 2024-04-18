@@ -132,15 +132,6 @@ class ClosetImageManager:
 
 
     def images_restore(self, **kwargs):
-        """
-        Method to retrieve images of restoreable items.
-
-        Args:
-            **kwargs: Additional filtering parameters.
-
-        Returns:
-            List of tuples containing (id, image_url) of restoreable clothing items.
-        """
         queryset = (
             ClosetClothes.objects.filter(
                 user_cloths__user=self.request.user, user_cloths__is_active=False
